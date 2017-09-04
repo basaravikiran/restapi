@@ -3,7 +3,7 @@ Library     ../lib/library_rest_helper.py
 Test Setup      Verify Server Is Running
                 ...    ${SERVER ADDRESS}
                 ...    ${SERVER PORT}
-Test Teardown   Delete Non Default Items
+Test Teardown   Reset Default Items
                 ...    ${SERVER ADDRESS}
                 ...    ${SERVER PORT}
 

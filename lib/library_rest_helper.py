@@ -19,17 +19,19 @@ def create_item(address, port, data):
     resp = requests.post(url,payload)
     logger.info(resp.text,True,True)
     _assert_equal(resp.status_code, 201)
+    logger.info('Server Responce:' + resp.text, True, True)
 
 
 def create_duplicate_item(address, port, data):
     url = 'http://{}:{}/items/'.format(address, port)
     payload = json.dumps(eval(data))
     resp1 = requests.post(url, payload)
-    resp2 = requests.post(url, payload)
-    logger.info(resp1.text, True, True)
-    logger.info(resp2.text, True, True)
-    _assert_equal(resp1.status_code, 201)
-    _assert_equal(resp2.status_code, 400)
+    if resp1.status_code == 201:
+        resp2 = requests.post(url, payload)
+        _assert_equal(resp2.status_code, 400)
+    else:
+        _assert_equal(resp1.status_code, 400)
+
 
 def verify_item_name_in_list(address, port, name):
     url = 'http://{}:{}/items'.format(address, port)
@@ -62,16 +64,27 @@ def delete_item(address, port, name):
     resp = requests.delete(url)
     _assert_equal(resp.status_code,204)
 
-def delete_non_default_items(address, port):
+def reset_default_items(address, port):
     url = 'http://{}:{}/items/'.format(address, port)
     resp = requests.get(url)
     _assert_equal(resp.status_code, 200)
     data=json.loads(resp.text)
+    logger.info(data, True, True)
     default_names=["item_0","item_1","item_2", "item_3","item_4"]
+    names=[]
     for item in data:
         name=item['name']
-        if name not in default_names :
+        if name in default_names :
+            names.append(name)
+        else:
             delete_item(address,port,name)
+
+    diff_names=list(set(default_names)-set(names))
+    for value in diff_names:
+        data={}
+        data['name']=value
+        create_item(address,port,str(data))
+    logger.info('diff_names:'+str(diff_names), True, True)
 
 
 def main():
