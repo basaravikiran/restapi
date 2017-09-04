@@ -3,7 +3,7 @@ Library     ../lib/library_rest_helper.py
 Test Setup      Verify Server Is Running
                 ...    ${SERVER ADDRESS}
                 ...    ${SERVER PORT}
-Test Teardown   Reset Default Items
+Test Teardown   Reset Data Base To Default Items
                 ...    ${SERVER ADDRESS}
                 ...    ${SERVER PORT}
 
@@ -13,9 +13,6 @@ ${SERVER PORT}        5000
 
 *** Test Cases ***
 Test Create Item
-    Verify Server Is Running
-    ...    ${SERVER ADDRESS}
-    ...    ${SERVER PORT}
     Create Item
     ...    ${SERVER ADDRESS}
     ...    ${SERVER PORT}
@@ -26,9 +23,6 @@ Test Create Item
     ...    ravi
 
 Test Create Duplicate Item
-    Verify Server Is Running
-    ...    ${SERVER ADDRESS}
-    ...    ${SERVER PORT}
     Create Duplicate Item
     ...    ${SERVER ADDRESS}
     ...    ${SERVER PORT}
@@ -38,6 +32,12 @@ Test Create Duplicate Item
     ...    ${SERVER PORT}
     ...    kiran
     Verify Item Name Not In List
+    ...    ${SERVER ADDRESS}
+    ...    ${SERVER PORT}
+    ...    kiran
+
+Test Delete Non Existing Item
+    Delete Item
     ...    ${SERVER ADDRESS}
     ...    ${SERVER PORT}
     ...    kiran
