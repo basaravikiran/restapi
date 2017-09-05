@@ -13,7 +13,7 @@ ${SERVER PORT}        5000
 
 *** Test Cases ***
 Test Create Item
-    Create Item
+  @{resp}  Create Item
     ...    ${SERVER ADDRESS}
     ...    ${SERVER PORT}
     ...    {'name': 'ravi', 'serial': '1001'}
@@ -21,6 +21,8 @@ Test Create Item
     ...    ${SERVER ADDRESS}
     ...    ${SERVER PORT}
     ...    ravi
+    Verify Response Code    @{resp}[0]      201
+
 
 Test Create Duplicate Item
     Create Duplicate Item
@@ -37,9 +39,11 @@ Test Create Duplicate Item
     ...    kiran
 
 Test Delete Non Existing Item
-    Delete Item
+    @{resp}  Delete Item
     ...    ${SERVER ADDRESS}
     ...    ${SERVER PORT}
-    ...    kiran
-
+    ...    item_10
+    verify response code  @{resp}[0]   404
+    verify response content  @{resp}[1]  {"error": "Item not found: item_10"}
 *** Keywords ***
+
