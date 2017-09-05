@@ -23,9 +23,23 @@ def create_item(address, port, data):
     resp = requests.post(url,payload)
     logger.info('Response Content:' + str(resp.text), True, True)
     logger.info('Status Code:' + str(resp.status_code), True, True)
-    _assert_equal(resp.status_code, 201)
+    return resp.status_code,resp.text
 
+def access_item_details(address, port, name):
+    logger.info('Accessing item {}'.format(name)+'... ', True, True)
+    url = 'http://{}:{}/items/{}'.format(address, port,name)
+    resp = requests.get(url)
+    logger.info('Response Content:' + str(resp.text), True, True)
+    logger.info('Status Code:' + str(resp.status_code), True, True)
+    return resp.status_code,resp.text
 
+def access_items_list(address, port):
+    logger.info('Accessing items list ... ', True, True)
+    url = 'http://{}:{}/items/'.format(address, port)
+    resp = requests.get(url)
+    logger.info('Response Content:' + str(resp.text), True, True)
+    logger.info('Status Code:' + str(resp.status_code), True, True)
+    return resp.status_code,resp.text
 
 def create_duplicate_item(address, port, data):
     logger.info('Trying to create duplicate item... ', True, True)
@@ -36,11 +50,11 @@ def create_duplicate_item(address, port, data):
         resp2 = requests.post(url, payload)
         logger.info('Response Content:' + str(resp2.text), True, True)
         logger.info('Status Code:' + str(resp2.status_code), True, True)
-        _assert_equal(resp2.status_code, 400)
+        return  resp2.status_code,resp2.text
     else:
         logger.info('Response Content:' + str(resp1.text), True, True)
         logger.info('Status Code:' + str(resp1.status_code), True, True)
-        _assert_equal(resp1.status_code, 400)
+        return resp1.status_code, resp1.text
 
 
 def verify_item_name_in_list(address, port, name):
@@ -81,10 +95,12 @@ def delete_item(address, port, name):
     resp = requests.delete(url)
     logger.info('Response Content:' + str(resp.text), True, True)
     logger.info('Status Code:' + str(resp.status_code), True, True)
-    _assert_equal(resp.status_code,204)
+    status_code=resp.status_code
+    content=resp.text
     url = 'http://{}:{}/items/'.format(address, port)
     resp = requests.get(url)
     logger.info('Items left after deleting {}: {}'.format(str(name),str(resp.text)), True, True)
+    return  status_code,content
 
 def reset_data_base_to_default_items(address, port):
     logger.info('Resetting data base to default items... ', True, True)
@@ -92,7 +108,6 @@ def reset_data_base_to_default_items(address, port):
     resp = requests.get(url)
     _assert_equal(resp.status_code, 200)
     data=json.loads(resp.text)
-    logger.info(data, True, True)
     default_names=["item_0","item_1","item_2", "item_3","item_4"]
     names=[]
     for item in data:
@@ -110,11 +125,12 @@ def reset_data_base_to_default_items(address, port):
     resp = requests.get(url)
     logger.info('Items after resetting : {}'.format(str(resp.text)), True, True)
 
+def verify_response_code(actual,expected):
+    actual=int(actual)
+    expected=int(expected)
+    _assert_equal(actual,expected)
 
-def main():
-    url='127.0.0.1'
-    port=5000
-    data=str({'name': 'akku1', 'serial': '5002'})
-    delete_non_default_items(url,port)
-
-if __name__=='__main__':main()
+def verify_response_content(actual,expected):
+    actual=eval(actual)
+    expected=eval(expected)
+    _assert_equal(actual,expected)
