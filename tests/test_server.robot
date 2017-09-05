@@ -45,6 +45,32 @@ Test Create Duplicate Item
     ...     @{resp}[0]
     ...     400
 
+Verify Response Code When Items List Is Accessed
+    @{resp}  Access Items List
+    ...    ${SERVER ADDRESS}
+    ...    ${SERVER PORT}
+    Verify Response Code
+    ...     @{resp}[0]
+    ...     200
+
+Verify Response Code When Existing Item Details Are Accessed
+    @{resp}  Access Item Details
+    ...    ${SERVER ADDRESS}
+    ...    ${SERVER PORT}
+    ...    item_1
+    Verify Response Code
+    ...     @{resp}[0]
+    ...     200
+
+Verify Response Code Non Existing Item Details Are Accessed
+    @{resp}  Access Item Details
+    ...    ${SERVER ADDRESS}
+    ...    ${SERVER PORT}
+    ...    abcde
+    Verify Response Code
+    ...     @{resp}[0]
+    ...     404
+
 Delete Existing Item And Verify Response
     @{resp}  Delete Item
     ...    ${SERVER ADDRESS}
@@ -57,7 +83,6 @@ Delete Existing Item And Verify Response
     ...    ${SERVER ADDRESS}
     ...    ${SERVER PORT}
     ...    item_1
-
 
 Delete Non Existing Item And Verify Response
     @{resp}  Delete Item
@@ -83,32 +108,4 @@ Create Item Without Name Perameter And Verify Responce
     ...     @{resp}[1]
     ...     {'error': 'Name required!'}
 
-Verify Response Code Non Existing Item Details Are Accessed
-    @{resp}  Access Item Details
-    ...    ${SERVER ADDRESS}
-    ...    ${SERVER PORT}
-    ...    abcde
-    Verify Response Code
-    ...     @{resp}[0]
-    ...     404
-
-Verify Response Code When Existing Item Details Are Accessed
-    @{resp}  Access Item Details
-    ...    ${SERVER ADDRESS}
-    ...    ${SERVER PORT}
-    ...    item_1
-    Verify Response Code
-    ...     @{resp}[0]
-    ...     200
-
-Verify Response Code When Items List Is Accessed
-    @{resp}  Access Items List
-    ...    ${SERVER ADDRESS}
-    ...    ${SERVER PORT}
-    Verify Response Code
-    ...     @{resp}[0]
-    ...     200
-
-
 *** Keywords ***
-
